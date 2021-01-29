@@ -33,14 +33,21 @@ export default {
   },
   methods: {
     login () {
-      this.$axios.post('/login', {
-        username: this.loginForm.username,
-        password: this.loginForm.password
-      }).then(successResponse => {
-        if (successResponse.data.status === 200) {
-          this.$router.replace({path: '/index'})
-        }
-      })
+      var _this = this
+      console.log(this.$store.state)
+      this.$axios
+        .post('/login', {
+          username: this.loginForm.username,
+          password: this.loginForm.password
+        })
+        .then(successResponse => {
+          if (successResponse.data.status === 200) {
+            // var data = this.loginForm
+            _this.$store.commit('login', _this.loginForm)
+            var path = this.$route.query.redirect
+            this.$router.replace({path: path === '/' || path === undefined ? '/index' : path})
+          }
+        })
         .catch(failResponse => {
         })
     }
@@ -50,7 +57,6 @@ export default {
 
 <style>
   #poster {
-    background-position: center;
     height: 100%;
     width: 100%;
     background-size: cover;
